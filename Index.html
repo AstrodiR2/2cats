@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Мій сайт</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #1a1a2e; }
+    .card { background: white; padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    img { border-radius: 50%; width: 80px; margin-bottom: 10px; }
+    button { background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #3367d6; }
+    #logout { background: #ea4335; }
+  </style>
+</head>
+<body>
 
+<div class="card">
+  <div id="loginBox">
+    <h2>Ласкаво просимо!</h2>
+    <button id="loginBtn">🔑 Увійти через Google</button>
+  </div>
+  <div id="userBox" style="display:none">
+    <img id="avatar" src="">
+    <h3 id="userName"></h3>
+    <p id="userEmail" style="color:gray"></p>
+    <button id="logout">Вийти</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBF79eYFfdsItsHy1AkeWruYn7lkLU9Wkk",
+    authDomain: "cot-d88f6.firebaseapp.com",
+    projectId: "cot-d88f6",
+    storageBucket: "cot-d88f6.firebasestorage.app",
+    messagingSenderId: "387911253931",
+    appId: "1:387911253931:web:52333792ec26e5864fdcee"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.getElementById("loginBtn").onclick = () => signInWithPopup(auth, provider);
+  document.getElementById("logout").onclick = () => signOut(auth);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("userBox").style.display = "block";
+      document.getElementById("avatar").src = user.photoURL;
+      document.getElementById("userName").textContent = user.displayName;
+      document.getElementById("userEmail").textContent = user.email;
+    } else {
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("userBox").style.display = "none";
+    }
+  });
+</script>
+
+</body>
+</html>
